@@ -1,0 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+:root {
+  --font-display: "Archivo Black", "Impact", "Arial Black", sans-serif;
+  --font-body: "Space Grotesk", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
