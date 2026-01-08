@@ -263,6 +263,7 @@ export function YoutubeThumbnail({
                 src={cardImage}
                 alt="Pokemon Card"
                 crossOrigin="anonymous"
+                referrerPolicy="no-referrer"
                 className="w-full h-auto"
                 style={{
                   width: '400px',

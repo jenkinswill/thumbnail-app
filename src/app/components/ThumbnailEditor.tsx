@@ -1,5 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
+import { toJpeg, toPng } from 'html-to-image';
 import { YoutubeThumbnail } from './YoutubeThumbnail';
 import { Upload, Download, RefreshCw, ArrowUp, ArrowDown } from 'lucide-react';
 
@@ -95,6 +96,58 @@ const prepareImageForCapture = async (value: string, proxyEnabled: boolean) => {
   return trimmed;
 };
 
+const downloadDataUrl = (dataUrl: string, filename: string) => {
+  const link = document.createElement('a');
+  link.download = filename;
+  link.href = dataUrl;
+  link.click();
+};
+
+const exportWithHtmlToImage = async (node: HTMLElement, format: ExportFormat) => {
+  const options = {
+    cacheBust: true,
+    pixelRatio: 1,
+    width: 1280,
+    height: 720,
+    backgroundColor: null as string | null,
+    fetchRequestInit: {
+      mode: 'cors' as RequestMode,
+      cache: 'no-cache' as RequestCache,
+    },
+  };
+
+  if (format === 'jpeg') {
+    return toJpeg(node, { ...options, quality: 0.92 });
+  }
+
+  return toPng(node, options);
+};
+
+const exportWithHtml2Canvas = async (node: HTMLElement, format: ExportFormat) => {
+  const canvas = await html2canvas(node, {
+    backgroundColor: null,
+    useCORS: true,
+    scale: 1,
+    width: 1280,
+    height: 720,
+  });
+
+  const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
+  const quality = format === 'jpeg' ? 0.92 : undefined;
+
+  if (canvas.toBlob) {
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, mimeType, quality));
+    if (blob) {
+      return await blobToDataUrl(blob);
+    }
+  }
+
+  return canvas.toDataURL(mimeType, quality);
+};
+
+const formatFilename = (trend: TrendDirection, format: ExportFormat) =>
+  `pokemon-thumbnail-${trend}.${format === 'jpeg' ? 'jpg' : 'png'}`;
+
 export function ThumbnailEditor() {
   const [trend, setTrend] = useState<TrendDirection>('up');
   const [cardImage, setCardImage] = useState(
@@ -165,40 +218,23 @@ export function ThumbnailEditor() {
         await waitForImages(previewRef.current);
       }
 
-      const canvas = await html2canvas(previewRef.current, {
-        backgroundColor: null,
-        useCORS: true,
-        scale: 1,
-        width: 1280,
-        height: 720,
-      });
+      const filename = formatFilename(trend, exportFormat);
 
-      const mimeType = exportFormat === 'jpeg' ? 'image/jpeg' : 'image/png';
-      const extension = exportFormat === 'jpeg' ? 'jpg' : 'png';
-      const filename = `pokemon-thumbnail-${trend}.${extension}`;
-
-      if (canvas.toBlob) {
-        const blob = await new Promise<Blob | null>((resolve) =>
-          canvas.toBlob(resolve, mimeType, exportFormat === 'jpeg' ? 0.92 : undefined)
-        );
-        if (blob) {
-          const link = document.createElement('a');
-          link.download = filename;
-          link.href = URL.createObjectURL(blob);
-          link.click();
-          URL.revokeObjectURL(link.href);
-          return;
-        }
+      try {
+        const dataUrl = await exportWithHtmlToImage(previewRef.current, exportFormat);
+        downloadDataUrl(dataUrl, filename);
+        return;
+      } catch (error) {
+        console.warn('html-to-image export failed, falling back to html2canvas', error);
       }
 
-      const link = document.createElement('a');
-      link.download = filename;
-      link.href = canvas.toDataURL(mimeType, exportFormat === 'jpeg' ? 0.92 : undefined);
-      link.click();
+      const fallbackUrl = await exportWithHtml2Canvas(previewRef.current, exportFormat);
+      downloadDataUrl(fallbackUrl, filename);
     } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
       console.error('Thumbnail export failed', error);
       alert(
-        'Download failed. Enable the image proxy or upload the image instead of using a URL. Some hosts block exports.'
+        `Download failed. Enable the image proxy or upload the image instead of using a URL. (${message})`
       );
     } finally {
       if (shouldRestore) {
