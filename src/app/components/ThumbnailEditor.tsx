@@ -5,6 +5,8 @@ import { Upload, Download, RefreshCw, ArrowUp, ArrowDown } from 'lucide-react';
 
 type TrendDirection = 'up' | 'down';
 
+type ExportFormat = 'png' | 'jpeg';
+
 type TrendPalette = {
   accent: string;
   accentSoft: string;
@@ -34,6 +36,65 @@ const buildProxyUrl = (value: string) => {
   return `https://images.weserv.nl/?url=${encodeURIComponent(stripped)}`;
 };
 
+const blobToDataUrl = (blob: Blob) =>
+  new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+
+const waitForImages = async (root: HTMLElement) => {
+  const images = Array.from(root.querySelectorAll('img'));
+  if (images.length === 0) {
+    return;
+  }
+
+  await Promise.all(
+    images.map((img) =>
+      img.complete && img.naturalWidth
+        ? Promise.resolve()
+        : new Promise<void>((resolve) => {
+            const done = () => {
+              img.removeEventListener('load', done);
+              img.removeEventListener('error', done);
+              resolve();
+            };
+            img.addEventListener('load', done);
+            img.addEventListener('error', done);
+          })
+    )
+  );
+};
+
+const prepareImageForCapture = async (value: string, proxyEnabled: boolean) => {
+  const trimmed = value.trim();
+  if (!trimmed || isDataUrl(trimmed) || trimmed.startsWith('blob:')) {
+    return trimmed;
+  }
+
+  if (!isRemoteUrl(trimmed)) {
+    return trimmed;
+  }
+
+  const candidateUrls = proxyEnabled ? [buildProxyUrl(trimmed), trimmed] : [trimmed];
+
+  for (const candidate of candidateUrls) {
+    try {
+      const response = await fetch(candidate, { mode: 'cors' });
+      if (!response.ok) {
+        continue;
+      }
+      const blob = await response.blob();
+      return await blobToDataUrl(blob);
+    } catch (error) {
+      continue;
+    }
+  }
+
+  return trimmed;
+};
+
 export function ThumbnailEditor() {
   const [trend, setTrend] = useState<TrendDirection>('up');
   const [cardImage, setCardImage] = useState(
@@ -45,6 +106,7 @@ export function ThumbnailEditor() {
   const [changePercent, setChangePercent] = useState('375');
   const [timeframe, setTimeframe] = useState('IN 7 DAYS');
   const [useProxy, setUseProxy] = useState(true);
+  const [exportFormat, setExportFormat] = useState<ExportFormat>('png');
   const [isDownloading, setIsDownloading] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
 
@@ -84,9 +146,23 @@ export function ThumbnailEditor() {
 
     setIsDownloading(true);
 
+    const originalImage = cardImage;
+    let shouldRestore = false;
+
     try {
       if (document.fonts && document.fonts.ready) {
         await document.fonts.ready;
+      }
+
+      const preparedImage = await prepareImageForCapture(cardImage, useProxy);
+      if (preparedImage && preparedImage !== cardImage) {
+        setCardImage(preparedImage);
+        shouldRestore = true;
+        await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+      }
+
+      if (previewRef.current) {
+        await waitForImages(previewRef.current);
       }
 
       const canvas = await html2canvas(previewRef.current, {
@@ -97,14 +173,37 @@ export function ThumbnailEditor() {
         height: 720,
       });
 
+      const mimeType = exportFormat === 'jpeg' ? 'image/jpeg' : 'image/png';
+      const extension = exportFormat === 'jpeg' ? 'jpg' : 'png';
+      const filename = `pokemon-thumbnail-${trend}.${extension}`;
+
+      if (canvas.toBlob) {
+        const blob = await new Promise<Blob | null>((resolve) =>
+          canvas.toBlob(resolve, mimeType, exportFormat === 'jpeg' ? 0.92 : undefined)
+        );
+        if (blob) {
+          const link = document.createElement('a');
+          link.download = filename;
+          link.href = URL.createObjectURL(blob);
+          link.click();
+          URL.revokeObjectURL(link.href);
+          return;
+        }
+      }
+
       const link = document.createElement('a');
-      link.download = `pokemon-thumbnail-${trend}.png`;
-      link.href = canvas.toDataURL('image/png');
+      link.download = filename;
+      link.href = canvas.toDataURL(mimeType, exportFormat === 'jpeg' ? 0.92 : undefined);
       link.click();
     } catch (error) {
       console.error('Thumbnail export failed', error);
-      alert('Download failed. Enable the image proxy or upload the image instead of using a URL.');
+      alert(
+        'Download failed. Enable the image proxy or upload the image instead of using a URL. Some hosts block exports.'
+      );
     } finally {
+      if (shouldRestore) {
+        setCardImage(originalImage);
+      }
       setIsDownloading(false);
     }
   };
@@ -118,6 +217,7 @@ export function ThumbnailEditor() {
     setChangePercent('375');
     setTimeframe('IN 7 DAYS');
     setUseProxy(true);
+    setExportFormat('png');
   };
 
   return (
@@ -358,6 +458,46 @@ export function ThumbnailEditor() {
                 fontWeight: '600',
               }}
             />
+          </div>
+
+          <div
+            className="p-6 rounded-xl"
+            style={{
+              backgroundColor: '#131312',
+              border: '2px solid #4c402b',
+            }}
+          >
+            <label className="block mb-3" style={{ color: '#eed093', fontSize: '16px', fontWeight: '700' }}>
+              Export Format
+            </label>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setExportFormat('png')}
+                className="flex-1 px-4 py-3 rounded-lg transition-all"
+                style={{
+                  backgroundColor: exportFormat === 'png' ? currentPalette.accent : '#262524',
+                  border: `2px solid ${exportFormat === 'png' ? currentPalette.accentLight : '#4c402b'}`,
+                  color: '#f9f9f9',
+                  fontWeight: '600',
+                }}
+              >
+                PNG
+              </button>
+              <button
+                type="button"
+                onClick={() => setExportFormat('jpeg')}
+                className="flex-1 px-4 py-3 rounded-lg transition-all"
+                style={{
+                  backgroundColor: exportFormat === 'jpeg' ? currentPalette.accent : '#262524',
+                  border: `2px solid ${exportFormat === 'jpeg' ? currentPalette.accentLight : '#4c402b'}`,
+                  color: '#f9f9f9',
+                  fontWeight: '600',
+                }}
+              >
+                JPG
+              </button>
+            </div>
           </div>
 
           <div
