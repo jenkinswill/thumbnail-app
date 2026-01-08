@@ -1,11 +1,17 @@
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
 import { YoutubeThumbnail } from './YoutubeThumbnail';
 import { Upload, Download, RefreshCw, ArrowUp, ArrowDown } from 'lucide-react';
 
 type TrendDirection = 'up' | 'down';
 
-const trendPalette = {
+type TrendPalette = {
+  accent: string;
+  accentSoft: string;
+  accentLight: string;
+};
+
+const trendPalette: Record<TrendDirection, TrendPalette> = {
   up: {
     accent: '#aa781d',
     accentSoft: '#4c402b',
@@ -18,6 +24,16 @@ const trendPalette = {
   },
 };
 
+const isDataUrl = (value: string) => value.startsWith('data:') || value.startsWith('blob:');
+const isRemoteUrl = (value: string) => /^https?:\/\//i.test(value);
+const isProxyUrl = (value: string) =>
+  value.includes('images.weserv.nl/?url=') || value.includes('wsrv.nl/?url=');
+
+const buildProxyUrl = (value: string) => {
+  const stripped = value.replace(/^https?:\/\//i, '');
+  return `https://images.weserv.nl/?url=${encodeURIComponent(stripped)}`;
+};
+
 export function ThumbnailEditor() {
   const [trend, setTrend] = useState<TrendDirection>('up');
   const [cardImage, setCardImage] = useState(
@@ -28,10 +44,25 @@ export function ThumbnailEditor() {
   const [price, setPrice] = useState('$1,250');
   const [changePercent, setChangePercent] = useState('375');
   const [timeframe, setTimeframe] = useState('IN 7 DAYS');
+  const [useProxy, setUseProxy] = useState(true);
   const [isDownloading, setIsDownloading] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
 
   const currentPalette = trendPalette[trend];
+
+  const displayCardImage = useMemo(() => {
+    const trimmed = cardImage.trim();
+    if (!trimmed) {
+      return trimmed;
+    }
+    if (!useProxy || isDataUrl(trimmed) || isProxyUrl(trimmed)) {
+      return trimmed;
+    }
+    if (isRemoteUrl(trimmed)) {
+      return buildProxyUrl(trimmed);
+    }
+    return trimmed;
+  }, [cardImage, useProxy]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -72,7 +103,7 @@ export function ThumbnailEditor() {
       link.click();
     } catch (error) {
       console.error('Thumbnail export failed', error);
-      alert('Download failed. Try uploading the image instead of using a URL.');
+      alert('Download failed. Enable the image proxy or upload the image instead of using a URL.');
     } finally {
       setIsDownloading(false);
     }
@@ -86,6 +117,7 @@ export function ThumbnailEditor() {
     setPrice('$1,250');
     setChangePercent('375');
     setTimeframe('IN 7 DAYS');
+    setUseProxy(true);
   };
 
   return (
@@ -141,6 +173,17 @@ export function ThumbnailEditor() {
                   color: '#f9f9f9',
                 }}
               />
+              <label
+                className="mt-3 flex items-center gap-2 text-xs"
+                style={{ color: '#f9f9f9', opacity: 0.75 }}
+              >
+                <input
+                  type="checkbox"
+                  checked={useProxy}
+                  onChange={(e) => setUseProxy(e.target.checked)}
+                />
+                Use image proxy for URL images (recommended for downloads).
+              </label>
               <p className="mt-2 text-xs" style={{ color: '#f9f9f9', opacity: 0.6 }}>
                 Uploading a file avoids CORS issues during download.
               </p>
@@ -375,7 +418,7 @@ export function ThumbnailEditor() {
             >
               <div ref={previewRef}>
                 <YoutubeThumbnail
-                  cardImage={cardImage}
+                  cardImage={displayCardImage}
                   title={title}
                   subtitle={subtitle}
                   price={price}
