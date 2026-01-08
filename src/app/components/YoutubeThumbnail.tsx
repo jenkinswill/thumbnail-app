@@ -87,10 +87,9 @@ export function YoutubeThumbnail({
           style={{ background: `radial-gradient(circle, ${theme.accentLight} 0%, transparent 70%)` }}
         ></div>
         <div
-          className="absolute top-[20%] right-[35%] w-[200px] h-[200px] rounded-full opacity-30 blur-[60px]"
+          className="absolute top-[20%] right-[35%] w-[200px] h-[200px] rounded-full opacity-60 blur-[70px]"
           style={{
             background: `radial-gradient(circle, ${theme.accentLight} 0%, transparent 60%)`,
-            animation: 'pulse 2s ease-in-out infinite',
           }}
         ></div>
       </div>
@@ -238,7 +237,7 @@ export function YoutubeThumbnail({
         <div className="w-[420px] flex items-center justify-center">
           <div className="relative">
             <div
-              className="absolute inset-0 rounded-3xl blur-3xl opacity-70 animate-pulse"
+              className="absolute inset-0 rounded-3xl blur-3xl opacity-85"
               style={{
                 background: `linear-gradient(135deg, ${theme.accent} 0%, ${theme.accentLight} 100%)`,
                 transform: 'scale(1.15)',
