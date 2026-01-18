@@ -332,55 +332,59 @@ export function ThumbnailEditor() {
             </div>
           </div>
 
-          <div
-            className="p-6 rounded-xl"
-            style={{
-              backgroundColor: '#131312',
-              border: '2px solid #4c402b',
-            }}
-          >
-            <label className="block mb-3" style={{ color: '#eed093', fontSize: '16px', fontWeight: '700' }}>
-              Main Title
-            </label>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg"
+          {template === 'classic' ? (
+            <div
+              className="p-6 rounded-xl"
               style={{
-                backgroundColor: '#262524',
+                backgroundColor: '#131312',
                 border: '2px solid #4c402b',
-                color: '#f9f9f9',
-                fontSize: '16px',
-                fontWeight: '600',
               }}
-            />
-          </div>
+            >
+              <label className="block mb-3" style={{ color: '#eed093', fontSize: '16px', fontWeight: '700' }}>
+                Main Title
+              </label>
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg"
+                style={{
+                  backgroundColor: '#262524',
+                  border: '2px solid #4c402b',
+                  color: '#f9f9f9',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                }}
+              />
+            </div>
+          ) : null}
 
-          <div
-            className="p-6 rounded-xl"
-            style={{
-              backgroundColor: '#131312',
-              border: '2px solid #4c402b',
-            }}
-          >
-            <label className="block mb-3" style={{ color: '#eed093', fontSize: '16px', fontWeight: '700' }}>
-              Subtitle
-            </label>
-            <input
-              type="text"
-              value={subtitle}
-              onChange={(e) => setSubtitle(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg"
+          {template === 'classic' ? (
+            <div
+              className="p-6 rounded-xl"
               style={{
-                backgroundColor: '#262524',
+                backgroundColor: '#131312',
                 border: '2px solid #4c402b',
-                color: '#f9f9f9',
-                fontSize: '16px',
-                fontWeight: '600',
               }}
-            />
-          </div>
+            >
+              <label className="block mb-3" style={{ color: '#eed093', fontSize: '16px', fontWeight: '700' }}>
+                Subtitle
+              </label>
+              <input
+                type="text"
+                value={subtitle}
+                onChange={(e) => setSubtitle(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg"
+                style={{
+                  backgroundColor: '#262524',
+                  border: '2px solid #4c402b',
+                  color: '#f9f9f9',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                }}
+              />
+            </div>
+          ) : null}
 
           <div
             className="p-6 rounded-xl"
@@ -542,30 +546,32 @@ export function ThumbnailEditor() {
             </p>
           </div>
 
-          <div
-            className="p-6 rounded-xl"
-            style={{
-              backgroundColor: '#131312',
-              border: '2px solid #4c402b',
-            }}
-          >
-            <label className="block mb-3" style={{ color: '#eed093', fontSize: '16px', fontWeight: '700' }}>
-              Timeframe Text
-            </label>
-            <input
-              type="text"
-              value={timeframe}
-              onChange={(e) => setTimeframe(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg"
+          {template === 'classic' ? (
+            <div
+              className="p-6 rounded-xl"
               style={{
-                backgroundColor: '#262524',
+                backgroundColor: '#131312',
                 border: '2px solid #4c402b',
-                color: '#f9f9f9',
-                fontSize: '16px',
-                fontWeight: '600',
               }}
-            />
-          </div>
+            >
+              <label className="block mb-3" style={{ color: '#eed093', fontSize: '16px', fontWeight: '700' }}>
+                Timeframe Text
+              </label>
+              <input
+                type="text"
+                value={timeframe}
+                onChange={(e) => setTimeframe(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg"
+                style={{
+                  backgroundColor: '#262524',
+                  border: '2px solid #4c402b',
+                  color: '#f9f9f9',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                }}
+              />
+            </div>
+          ) : null}
 
           <div
             className="p-6 rounded-xl"

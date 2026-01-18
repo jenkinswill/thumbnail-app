@@ -109,53 +109,22 @@ export function YoutubeThumbnailImpact({
       </div>
 
       <div className="relative z-10 flex h-full">
-        <div className="flex-1 flex flex-col justify-center pl-12 pr-6 gap-6">
-          <div className="flex items-center gap-6">
+        <div className="flex-1 flex flex-col justify-center pl-12 pr-6 gap-8">
+          <div className="flex items-center gap-4">
             <ArrowIcon className="w-28 h-28" style={{ color: theme.accent, strokeWidth: 5 }} />
-            <div>
-              <div
-                style={{
-                  fontSize: '96px',
-                  color: theme.accent,
-                  fontWeight: '900',
-                  fontFamily: 'var(--font-display)',
-                  lineHeight: 1,
-                  textShadow: theme.percentGlow,
-                }}
-              >
-                {changeText}
-              </div>
-              {title ? (
-                <div
-                  style={{
-                    fontSize: '36px',
-                    color: '#f9f9f9',
-                    fontWeight: '900',
-                    fontFamily: 'var(--font-display)',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.02em',
-                  }}
-                >
-                  {title}
-                </div>
-              ) : null}
-            </div>
-          </div>
-
-          {subtitle ? (
             <div
               style={{
-                fontSize: '30px',
-                color: '#f9f9f9',
-                fontWeight: '800',
+                fontSize: '104px',
+                color: theme.accent,
+                fontWeight: '900',
                 fontFamily: 'var(--font-display)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.04em',
+                lineHeight: 1,
+                textShadow: theme.percentGlow,
               }}
             >
-              {subtitle}
+              {changeText}
             </div>
-          ) : null}
+          </div>
 
           <div className="flex items-center gap-4">
             <div
@@ -186,23 +155,6 @@ export function YoutubeThumbnailImpact({
               {price}
             </div>
           </div>
-
-          {timeframe ? (
-            <div
-              className="inline-flex items-center px-4 py-2 rounded-full"
-              style={{
-                backgroundColor: theme.accentSoft,
-                color: '#f9f9f9',
-                fontWeight: '700',
-                fontFamily: 'var(--font-body)',
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                fontSize: '14px',
-              }}
-            >
-              {timeframe}
-            </div>
-          ) : null}
         </div>
 
         <div className="w-[520px] flex items-center justify-center pr-10">
