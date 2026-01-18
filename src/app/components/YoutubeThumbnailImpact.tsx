@@ -86,12 +86,17 @@ export function YoutubeThumbnailImpact({
       </div>
 
       <div className="relative z-10 flex h-full">
-        <div className="flex-1 flex items-center pl-12 pr-6">
+        <div className="flex-1 flex items-center pl-12 pr-16">
           <div
             className="relative flex flex-col gap-2"
-            style={{ transform: 'translateY(190px) scale(1.18)', transformOrigin: 'left center' }}
+            style={{
+              transform: 'translateY(170px) scale(1.12)',
+              transformOrigin: 'left center',
+              alignItems: 'center',
+              width: '560px',
+            }}
           >
-            <div className="absolute -top-[140px] left-0 w-[640px] h-[260px] opacity-90 z-0">
+            <div className="absolute -top-[220px] left-0 w-[640px] h-[240px] opacity-90 z-0">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chartData} margin={{ top: 10, right: 10, bottom: 0, left: 0 }}>
                   <defs>
@@ -114,7 +119,10 @@ export function YoutubeThumbnailImpact({
               </ResponsiveContainer>
             </div>
 
-            <div className="relative z-10 flex items-center gap-4" style={{ marginTop: '12px' }}>
+            <div
+              className="relative z-10 flex items-center justify-center gap-4"
+              style={{ marginTop: '8px' }}
+            >
               <ArrowIcon className="w-28 h-28" style={{ color: theme.accent, strokeWidth: 5 }} />
               <div
                 style={{
@@ -130,7 +138,7 @@ export function YoutubeThumbnailImpact({
               </div>
             </div>
 
-            <div className="relative z-10 flex items-center gap-4" style={{ marginTop: '-4px' }}>
+            <div className="relative z-10 flex items-center justify-center gap-4" style={{ marginTop: '-2px' }}>
               <div
                 className="px-8 py-5 rounded-xl"
                 style={{
