@@ -89,7 +89,7 @@ export function YoutubeThumbnailImpact({
         <div className="flex-1 flex items-center pl-12 pr-6">
           <div
             className="relative flex flex-col gap-2"
-            style={{ transform: 'translateY(160px) scale(1.18)', transformOrigin: 'left center' }}
+            style={{ transform: 'translateY(190px) scale(1.18)', transformOrigin: 'left center' }}
           >
             <div className="absolute -top-[140px] left-0 w-[640px] h-[260px] opacity-90 z-0">
               <ResponsiveContainer width="100%" height="100%">
@@ -114,7 +114,7 @@ export function YoutubeThumbnailImpact({
               </ResponsiveContainer>
             </div>
 
-            <div className="relative z-10 flex items-center gap-4">
+            <div className="relative z-10 flex items-center gap-4" style={{ marginTop: '12px' }}>
               <ArrowIcon className="w-28 h-28" style={{ color: theme.accent, strokeWidth: 5 }} />
               <div
                 style={{
@@ -130,15 +130,15 @@ export function YoutubeThumbnailImpact({
               </div>
             </div>
 
-            <div className="relative z-10 flex items-center gap-4" style={{ marginTop: '-8px' }}>
+            <div className="relative z-10 flex items-center gap-4" style={{ marginTop: '-4px' }}>
               <div
-                className="px-6 py-4 rounded-xl"
+                className="px-8 py-5 rounded-xl"
                 style={{
                   backgroundColor: '#f9f9f9',
                   color: '#111',
                   fontWeight: '900',
                   fontFamily: 'var(--font-display)',
-                  fontSize: '44px',
+                  fontSize: '60px',
                   boxShadow: `0 14px 24px rgba(0, 0, 0, 0.65), 0 0 22px ${theme.accentGlow}`,
                 }}
               >
@@ -146,13 +146,13 @@ export function YoutubeThumbnailImpact({
               </div>
               <ArrowRight className="w-12 h-12" style={{ color: theme.accent, strokeWidth: 5 }} />
               <div
-                className="px-6 py-4 rounded-xl"
+                className="px-8 py-5 rounded-xl"
                 style={{
                   backgroundColor: theme.accent,
                   color: '#061008',
                   fontWeight: '900',
                   fontFamily: 'var(--font-display)',
-                  fontSize: '50px',
+                  fontSize: '72px',
                   boxShadow: `0 14px 26px rgba(0, 0, 0, 0.65), 0 0 30px ${theme.accentGlow}`,
                 }}
               >
