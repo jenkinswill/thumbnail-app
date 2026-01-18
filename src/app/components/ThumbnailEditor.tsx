@@ -2,9 +2,11 @@ import React, { useMemo, useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
 import { toJpeg, toPng } from 'html-to-image';
 import { YoutubeThumbnail } from './YoutubeThumbnail';
+import { YoutubeThumbnailImpact } from './YoutubeThumbnailImpact';
 import { Upload, Download, RefreshCw, ArrowUp, ArrowDown } from 'lucide-react';
 
 type TrendDirection = 'up' | 'down';
+type TemplateVariant = 'classic' | 'impact';
 
 type ExportFormat = 'png' | 'jpeg';
 
@@ -145,17 +147,19 @@ const exportWithHtml2Canvas = async (node: HTMLElement, format: ExportFormat) =>
   return canvas.toDataURL(mimeType, quality);
 };
 
-const formatFilename = (trend: TrendDirection, format: ExportFormat) =>
-  `pokemon-thumbnail-${trend}.${format === 'jpeg' ? 'jpg' : 'png'}`;
+const formatFilename = (trend: TrendDirection, format: ExportFormat, template: TemplateVariant) =>
+  `pokemon-thumbnail-${template}-${trend}.${format === 'jpeg' ? 'jpg' : 'png'}`;
 
 export function ThumbnailEditor() {
   const [trend, setTrend] = useState<TrendDirection>('up');
+  const [template, setTemplate] = useState<TemplateVariant>('classic');
   const [cardImage, setCardImage] = useState(
     'https://images.unsplash.com/photo-1606502281004-f86cf1282af5?w=400&h=600&fit=crop'
   );
   const [title, setTitle] = useState('WEEKLY PRICE SHOCK');
   const [subtitle, setSubtitle] = useState('POKEMON CARD WATCH');
   const [price, setPrice] = useState('$1,250');
+  const [beforePrice, setBeforePrice] = useState('$100');
   const [changePercent, setChangePercent] = useState('375');
   const [timeframe, setTimeframe] = useState('IN 7 DAYS');
   const [useProxy, setUseProxy] = useState(true);
@@ -218,7 +222,7 @@ export function ThumbnailEditor() {
         await waitForImages(previewRef.current);
       }
 
-      const filename = formatFilename(trend, exportFormat);
+      const filename = formatFilename(trend, exportFormat, template);
 
       try {
         const dataUrl = await exportWithHtmlToImage(previewRef.current, exportFormat);
@@ -246,10 +250,12 @@ export function ThumbnailEditor() {
 
   const handleReset = () => {
     setTrend('up');
+    setTemplate('classic');
     setCardImage('https://images.unsplash.com/photo-1606502281004-f86cf1282af5?w=400&h=600&fit=crop');
     setTitle('WEEKLY PRICE SHOCK');
     setSubtitle('POKEMON CARD WATCH');
     setPrice('$1,250');
+    setBeforePrice('$100');
     setChangePercent('375');
     setTimeframe('IN 7 DAYS');
     setUseProxy(true);
@@ -384,6 +390,46 @@ export function ThumbnailEditor() {
             }}
           >
             <label className="block mb-3" style={{ color: '#eed093', fontSize: '16px', fontWeight: '700' }}>
+              Thumbnail Style
+            </label>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setTemplate('classic')}
+                className="flex-1 px-4 py-3 rounded-lg transition-all"
+                style={{
+                  backgroundColor: template === 'classic' ? currentPalette.accent : '#262524',
+                  border: `2px solid ${template === 'classic' ? currentPalette.accentLight : '#4c402b'}`,
+                  color: '#f9f9f9',
+                  fontWeight: '600',
+                }}
+              >
+                Classic
+              </button>
+              <button
+                type="button"
+                onClick={() => setTemplate('impact')}
+                className="flex-1 px-4 py-3 rounded-lg transition-all"
+                style={{
+                  backgroundColor: template === 'impact' ? currentPalette.accent : '#262524',
+                  border: `2px solid ${template === 'impact' ? currentPalette.accentLight : '#4c402b'}`,
+                  color: '#f9f9f9',
+                  fontWeight: '600',
+                }}
+              >
+                CTR Boost
+              </button>
+            </div>
+          </div>
+
+          <div
+            className="p-6 rounded-xl"
+            style={{
+              backgroundColor: '#131312',
+              border: '2px solid #4c402b',
+            }}
+          >
+            <label className="block mb-3" style={{ color: '#eed093', fontSize: '16px', fontWeight: '700' }}>
               Trend Direction
             </label>
             <div className="flex gap-3">
@@ -416,6 +462,31 @@ export function ThumbnailEditor() {
                 Price Down
               </button>
             </div>
+          </div>
+
+          <div
+            className="p-6 rounded-xl"
+            style={{
+              backgroundColor: '#131312',
+              border: '2px solid #4c402b',
+            }}
+          >
+            <label className="block mb-3" style={{ color: '#eed093', fontSize: '16px', fontWeight: '700' }}>
+              Before Price
+            </label>
+            <input
+              type="text"
+              value={beforePrice}
+              onChange={(e) => setBeforePrice(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg"
+              style={{
+                backgroundColor: '#262524',
+                border: '2px solid #4c402b',
+                color: '#f9f9f9',
+                fontSize: '16px',
+                fontWeight: '600',
+              }}
+            />
           </div>
 
           <div
@@ -593,15 +664,28 @@ export function ThumbnailEditor() {
               style={{ boxShadow: `0 20px 60px ${currentPalette.accentSoft}` }}
             >
               <div ref={previewRef}>
-                <YoutubeThumbnail
-                  cardImage={displayCardImage}
-                  title={title}
-                  subtitle={subtitle}
-                  price={price}
-                  changePercent={changePercent}
-                  timeframe={timeframe}
-                  trend={trend}
-                />
+                {template === 'classic' ? (
+                  <YoutubeThumbnail
+                    cardImage={displayCardImage}
+                    title={title}
+                    subtitle={subtitle}
+                    price={price}
+                    changePercent={changePercent}
+                    timeframe={timeframe}
+                    trend={trend}
+                  />
+                ) : (
+                  <YoutubeThumbnailImpact
+                    cardImage={displayCardImage}
+                    title={title}
+                    subtitle={subtitle}
+                    price={price}
+                    beforePrice={beforePrice}
+                    changePercent={changePercent}
+                    timeframe={timeframe}
+                    trend={trend}
+                  />
+                )}
               </div>
             </div>
           </div>
