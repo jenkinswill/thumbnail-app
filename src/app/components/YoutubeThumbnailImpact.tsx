@@ -90,13 +90,13 @@ export function YoutubeThumbnailImpact({
           <div
             className="relative flex flex-col gap-2"
             style={{
-              transform: 'translateY(170px) scale(1.12)',
+              transform: 'translateY(120px) scale(1.12)',
               transformOrigin: 'left center',
               alignItems: 'center',
               width: '560px',
             }}
           >
-            <div className="absolute -top-[220px] left-0 w-[640px] h-[240px] opacity-90 z-0">
+            <div className="absolute -top-[260px] left-0 w-[640px] h-[240px] opacity-90 z-0">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chartData} margin={{ top: 10, right: 10, bottom: 0, left: 0 }}>
                   <defs>
