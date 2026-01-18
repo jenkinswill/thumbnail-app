@@ -111,7 +111,7 @@ export function YoutubeThumbnailImpact({
                     type="linear"
                     dataKey="value"
                     stroke={theme.accent}
-                    strokeWidth={7}
+                  strokeWidth={10}
                     fill={`url(#impactGradient-${trend})`}
                     dot={false}
                   />
@@ -178,6 +178,13 @@ export function YoutubeThumbnailImpact({
               transformOrigin: 'center',
             }}
           >
+            <div
+              className="absolute inset-[-8%] rounded-[36px] opacity-70"
+              style={{
+                background: 'radial-gradient(circle, rgba(24, 216, 92, 0.25) 0%, rgba(5, 10, 8, 0.05) 55%, transparent 70%)',
+                filter: 'blur(12px)',
+              }}
+            ></div>
             <div
               className="absolute inset-0 rounded-[32px]"
               style={{
