@@ -85,7 +85,7 @@ export function YoutubeThumbnailImpact({
         ></div>
       </div>
 
-      <div className="absolute top-10 left-10 w-[640px] h-[280px] opacity-90">
+      <div className="absolute top-12 left-10 w-[640px] h-[300px] opacity-90">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={chartData} margin={{ top: 10, right: 10, bottom: 0, left: 0 }}>
             <defs>
@@ -109,50 +109,55 @@ export function YoutubeThumbnailImpact({
       </div>
 
       <div className="relative z-10 flex h-full">
-        <div className="flex-1 flex flex-col justify-center pl-12 pr-6 gap-8">
-          <div className="flex items-center gap-4">
-            <ArrowIcon className="w-28 h-28" style={{ color: theme.accent, strokeWidth: 5 }} />
-            <div
-              style={{
-                fontSize: '104px',
-                color: theme.accent,
-                fontWeight: '900',
-                fontFamily: 'var(--font-display)',
-                lineHeight: 1,
-                textShadow: theme.percentGlow,
-              }}
-            >
-              {changeText}
+        <div className="flex-1 flex flex-col justify-center pl-12 pr-6">
+          <div
+            className="flex flex-col gap-4"
+            style={{ transform: 'scale(1.18)', transformOrigin: 'left center' }}
+          >
+            <div className="flex items-center gap-4">
+              <ArrowIcon className="w-28 h-28" style={{ color: theme.accent, strokeWidth: 5 }} />
+              <div
+                style={{
+                  fontSize: '110px',
+                  color: theme.accent,
+                  fontWeight: '900',
+                  fontFamily: 'var(--font-display)',
+                  lineHeight: 1,
+                  textShadow: `0 10px 24px rgba(0, 0, 0, 0.75), ${theme.percentGlow}`,
+                }}
+              >
+                {changeText}
+              </div>
             </div>
-          </div>
 
-          <div className="flex items-center gap-4">
-            <div
-              className="px-5 py-3 rounded-xl"
-              style={{
-                backgroundColor: '#f9f9f9',
-                color: '#111',
-                fontWeight: '900',
-                fontFamily: 'var(--font-display)',
-                fontSize: '28px',
-                boxShadow: '0 10px 20px rgba(0, 0, 0, 0.45)',
-              }}
-            >
-              {beforePrice}
-            </div>
-            <ArrowRight className="w-12 h-12" style={{ color: theme.accent, strokeWidth: 5 }} />
-            <div
-              className="px-5 py-3 rounded-xl"
-              style={{
-                backgroundColor: theme.accent,
-                color: '#061008',
-                fontWeight: '900',
-                fontFamily: 'var(--font-display)',
-                fontSize: '32px',
-                boxShadow: `0 0 25px ${theme.accentGlow}`,
-              }}
-            >
-              {price}
+            <div className="flex items-center gap-4">
+              <div
+                className="px-5 py-3 rounded-xl"
+                style={{
+                  backgroundColor: '#f9f9f9',
+                  color: '#111',
+                  fontWeight: '900',
+                  fontFamily: 'var(--font-display)',
+                  fontSize: '30px',
+                  boxShadow: `0 12px 22px rgba(0, 0, 0, 0.6), 0 0 18px ${theme.accentGlow}`,
+                }}
+              >
+                {beforePrice}
+              </div>
+              <ArrowRight className="w-12 h-12" style={{ color: theme.accent, strokeWidth: 5 }} />
+              <div
+                className="px-5 py-3 rounded-xl"
+                style={{
+                  backgroundColor: theme.accent,
+                  color: '#061008',
+                  fontWeight: '900',
+                  fontFamily: 'var(--font-display)',
+                  fontSize: '34px',
+                  boxShadow: `0 12px 22px rgba(0, 0, 0, 0.6), 0 0 28px ${theme.accentGlow}`,
+                }}
+              >
+                {price}
+              </div>
             </div>
           </div>
         </div>
