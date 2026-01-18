@@ -85,44 +85,44 @@ export function YoutubeThumbnailImpact({
         ></div>
       </div>
 
-      <div className="absolute top-12 left-10 w-[640px] h-[300px] opacity-90">
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={chartData} margin={{ top: 10, right: 10, bottom: 0, left: 0 }}>
-            <defs>
-              <linearGradient id={`impactGradient-${trend}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={theme.accent} stopOpacity={0.65} />
-                <stop offset="100%" stopColor={theme.accent} stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <XAxis dataKey="time" hide={true} />
-            <YAxis hide={true} domain={[0, 100]} />
-            <Area
-              type="linear"
-              dataKey="value"
-              stroke={theme.accent}
-              strokeWidth={7}
-              fill={`url(#impactGradient-${trend})`}
-              dot={false}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
-      </div>
-
       <div className="relative z-10 flex h-full">
-        <div className="flex-1 flex flex-col justify-center pl-12 pr-6">
+        <div className="flex-1 flex items-center pl-12 pr-6">
           <div
-            className="flex flex-col gap-4"
-            style={{ transform: 'scale(1.18)', transformOrigin: 'left center' }}
+            className="relative flex flex-col gap-2"
+            style={{ transform: 'translateY(160px) scale(1.18)', transformOrigin: 'left center' }}
           >
-            <div className="flex items-center gap-4">
+            <div className="absolute -top-[140px] left-0 w-[640px] h-[260px] opacity-90 z-0">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={chartData} margin={{ top: 10, right: 10, bottom: 0, left: 0 }}>
+                  <defs>
+                    <linearGradient id={`impactGradient-${trend}`} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={theme.accent} stopOpacity={0.65} />
+                      <stop offset="100%" stopColor={theme.accent} stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <XAxis dataKey="time" hide={true} />
+                  <YAxis hide={true} domain={[0, 100]} />
+                  <Area
+                    type="linear"
+                    dataKey="value"
+                    stroke={theme.accent}
+                    strokeWidth={7}
+                    fill={`url(#impactGradient-${trend})`}
+                    dot={false}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="relative z-10 flex items-center gap-4">
               <ArrowIcon className="w-28 h-28" style={{ color: theme.accent, strokeWidth: 5 }} />
               <div
                 style={{
-                  fontSize: '110px',
+                  fontSize: '114px',
                   color: theme.accent,
                   fontWeight: '900',
                   fontFamily: 'var(--font-display)',
-                  lineHeight: 1,
+                  lineHeight: 0.95,
                   textShadow: `0 10px 24px rgba(0, 0, 0, 0.75), ${theme.percentGlow}`,
                 }}
               >
@@ -130,30 +130,30 @@ export function YoutubeThumbnailImpact({
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="relative z-10 flex items-center gap-4" style={{ marginTop: '-8px' }}>
               <div
-                className="px-5 py-3 rounded-xl"
+                className="px-6 py-4 rounded-xl"
                 style={{
                   backgroundColor: '#f9f9f9',
                   color: '#111',
                   fontWeight: '900',
                   fontFamily: 'var(--font-display)',
-                  fontSize: '30px',
-                  boxShadow: `0 12px 22px rgba(0, 0, 0, 0.6), 0 0 18px ${theme.accentGlow}`,
+                  fontSize: '44px',
+                  boxShadow: `0 14px 24px rgba(0, 0, 0, 0.65), 0 0 22px ${theme.accentGlow}`,
                 }}
               >
                 {beforePrice}
               </div>
               <ArrowRight className="w-12 h-12" style={{ color: theme.accent, strokeWidth: 5 }} />
               <div
-                className="px-5 py-3 rounded-xl"
+                className="px-6 py-4 rounded-xl"
                 style={{
                   backgroundColor: theme.accent,
                   color: '#061008',
                   fontWeight: '900',
                   fontFamily: 'var(--font-display)',
-                  fontSize: '34px',
-                  boxShadow: `0 12px 22px rgba(0, 0, 0, 0.6), 0 0 28px ${theme.accentGlow}`,
+                  fontSize: '50px',
+                  boxShadow: `0 14px 26px rgba(0, 0, 0, 0.65), 0 0 30px ${theme.accentGlow}`,
                 }}
               >
                 {price}
